@@ -5,6 +5,11 @@ const dotenv = require("dotenv");
 const blogRoutes = require("./routes/blogRoutes");
 const userRoutes = require("./routes/userRoutes");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser()); // Parse cookies
+// app.use(bodyParser.json());
+
 
 dotenv.config();
 const port = process.env.PORT || 8000;

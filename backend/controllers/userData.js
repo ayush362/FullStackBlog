@@ -32,6 +32,8 @@ exports.signUp = async (req, res) => {
 };
 
 // Login function
+const jwt = require("jsonwebtoken");
+
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -46,14 +48,48 @@ exports.login = async (req, res) => {
         }
         const user = rows[0];
 
-        // Compare the provided password with the hashed password
+        // Compare passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
+
+        // Generate a JWT token
+        const token = jwt.sign(
+            { id: user.id, email: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        // Send token as an HTTP-only cookie
+        res.cookie("token", token, {
+            httpOnly: true, // Prevent client-side JavaScript access
+            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            maxAge: 60 * 60 * 1000, // 1 hour
+        });
+
         res.status(200).json({ message: "Login successful" });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
+};
+
+exports.logout = (req, res) => {
+    res.clearCookie("token");
+    res.status(200).json({ message: "Logged out successfully" });
+};
+
+exports.verifyToken = (req, res) => {
+    const token = req.cookies.token; // Get token from cookies
+    if (!token) {
+        return res.status(401).json({ valid: false, message: "No token provided" });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ valid: false, message: "Invalid token" });
+        }
+        res.status(200).json({ valid: true, user });
+    });
 };
