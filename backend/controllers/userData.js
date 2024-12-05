@@ -1,5 +1,7 @@
 const db = require("../config/db");
+const bcrypt = require("bcrypt");
 
+// Signup function
 exports.signUp = async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -12,11 +14,13 @@ exports.signUp = async (req, res) => {
             if (rows.length > 0) {
                 return res.status(400).json({ message: "User already exists" });
             } else {
+                // Hash the password
+                const hashedPassword = await bcrypt.hash(password, 10);
                 const [result] = await db
                     .promise()
                     .execute(
                         "INSERT INTO users (name, username, password) VALUES (?, ?, ?)",
-                        [name, email, password]
+                        [name, email, hashedPassword]
                     );
                 res.status(201).json({ message: "User created successfully" });
             }
@@ -27,6 +31,7 @@ exports.signUp = async (req, res) => {
     }
 };
 
+// Login function
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -35,11 +40,15 @@ exports.login = async (req, res) => {
         }
         const [rows] = await db
             .promise()
-            .execute(
-                "SELECT * FROM users WHERE username = ? AND password = ?",
-                [email, password]
-            );
+            .execute("SELECT * FROM users WHERE username = ?", [email]);
         if (rows.length === 0) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+        const user = rows[0];
+
+        // Compare the provided password with the hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
         res.status(200).json({ message: "Login successful" });
