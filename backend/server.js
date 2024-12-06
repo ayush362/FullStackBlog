@@ -6,10 +6,12 @@ const blogRoutes = require("./routes/blogRoutes");
 const userRoutes = require("./routes/userRoutes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
+app.use(cors());
 
 app.use(cookieParser()); // Parse cookies
 // app.use(bodyParser.json());
-
 
 dotenv.config();
 const port = process.env.PORT || 8000;

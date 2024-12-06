@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Signup function
 exports.signUp = async (req, res) => {
@@ -32,10 +33,10 @@ exports.signUp = async (req, res) => {
 };
 
 // Login function
-const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+    console.log(email, password);
     try {
         if (!email || !password) {
             return res.status(400).json({ message: "All fields are required" });
