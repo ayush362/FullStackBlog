@@ -66,10 +66,10 @@ exports.login = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true, // Prevent client-side JavaScript access
             secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-            maxAge: 60 * 60 * 1000, // 1 hour
+            maxAge: 60 * 60 * 1000, // 1 hourcreateBlog
         });
 
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json({ message: "Login successful", token });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -82,7 +82,7 @@ exports.logout = (req, res) => {
 };
 
 exports.verifyToken = (req, res) => {
-    const token = req.cookies.token; // Get token from cookies
+    const token = req.headers.authorization?.split(" ")[1]; // Extract token from "Bearer <token>"
     if (!token) {
         return res.status(401).json({ valid: false, message: "No token provided" });
     }

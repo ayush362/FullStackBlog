@@ -13,34 +13,10 @@ const formatDate = (dateString) => {
     });
 };
 
-const BlogModal = ({ blog, onClose }) => {
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                <h2 className="text-3xl font-bold mb-4">{blog.title}</h2>
-                <div className="text-gray-600 mb-4">
-                    <span>By {blog.author}</span>
-                    {blog.date && (
-                        <span className="ml-4">{formatDate(blog.date)}</span>
-                    )}
-                </div>
-                <p className="text-gray-800 leading-relaxed">{blog.content}</p>
-                <button
-                    onClick={onClose}
-                    className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                >
-                    Close
-                </button>
-            </div>
-        </div>
-    );
-};
-
 const FetchBlog = () => {
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedBlog, setSelectedBlog] = useState(null);
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -62,69 +38,91 @@ const FetchBlog = () => {
         fetchBlogs();
     }, []);
 
+    const featuredBlog = blogs[0];
+    const otherBlogs = blogs.slice(1);
+
     if (loading) return <div className="text-center text-xl">Loading...</div>;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     return (
         <>
-            <div className="max-w-6xl mx-auto px-4 py-8 relative">
-                <div>
-                    <h1 className="text-4xl font-extrabold text-gray-900 mb-8 border-b-4 border-blue-500 pb-4">
-                        Blogs
+            <div className="max-w-4xl mx-auto px-4 py-8 space-y-12">
+                {/* Page Header */}
+                <div className="text-center border-b-2 border-gray-200 pb-6">
+                    <h1 className="text-5xl font-serif font-bold text-gray-900 tracking-tight">
+                        Our Blog
                     </h1>
+                    <p className="mt-4 text-gray-600 text-lg">
+                        Insights, stories, and perspectives
+                    </p>
                 </div>
-                {/* Admin Button */}
+
+                {/* Featured Blog */}
+                {featuredBlog && (
+                    <article className="group space-y-4">
+                        <div className="mb-4 text-sm text-gray-500 flex items-center space-x-4">
+                            <span>{featuredBlog.author || "Anonymous"}</span>
+                            <span>•</span>
+                            <time>{formatDate(featuredBlog.date)}</time>
+                        </div>
+                        <h2 className="text-3xl font-serif font-bold mb-4 text-gray-900 hover:text-blue-600 transition-colors">
+                            {featuredBlog.title}
+                        </h2>
+                        <p className="text-gray-700 leading-relaxed mb-6">
+                            {featuredBlog.content
+                                ? `${featuredBlog.content.slice(0, 250)}...`
+                                : "No content available"}
+                        </p>
+                        <Link
+                            href={`/blog/${featuredBlog.id}`}
+                            className="inline-block bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
+                        >
+                            Read Full Article
+                        </Link>
+                    </article>
+                )}
+
+                {/* Recent Blogs */}
+                <div className="space-y-8 border-t pt-8 border-gray-200">
+                    <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-6">
+                        Recent Posts
+                    </h3>
+                    {otherBlogs.map((blog) => (
+                        <article
+                            key={blog.id}
+                            className="group space-y-4 pb-8 border-b border-gray-200 last:border-b-0"
+                        >
+                            <div className="mb-3 text-sm text-gray-500 flex items-center space-x-4">
+                                <span>{blog.author || "Anonymous"}</span>
+                                <span>•</span>
+                                <time>{formatDate(blog.date)}</time>
+                            </div>
+                            <h2 className="text-2xl font-serif font-bold mb-4 text-gray-900 hover:text-blue-600 transition-colors">
+                                {blog.title}
+                            </h2>
+                            <p className="text-gray-700 leading-relaxed mb-4">
+                                {blog.content
+                                    ? `${blog.content.slice(0, 200)}...`
+                                    : "No content available"}
+                            </p>
+                            <Link
+                                href={`/blog/${blog.id}`}
+                                className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                            >
+                                Continue Reading →
+                            </Link>
+                        </article>
+                    ))}
+                </div>
+
+                {/* Admin Panel Link */}
                 <Link
                     href="/admin"
-                    className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-green-600 transition-colors z-50"
+                    className="fixed bottom-6 right-6 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-600 transition-colors z-50"
                 >
                     Admin Panel
                 </Link>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {blogs.map((blog) => (
-                        <div
-                            key={blog.id}
-                            className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
-                        >
-                            <div className="p-6 flex flex-col h-full">
-                                <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-blue-600 transition-colors">
-                                    {blog.title || "Untitled"}
-                                </h2>
-                                <div className="flex items-center text-gray-500 mb-4 space-x-4">
-                                    <span className="font-medium">
-                                        {blog.author || "Anonymous"}
-                                    </span>
-                                    {blog.date && (
-                                        <span>{formatDate(blog.date)}</span>
-                                    )}
-                                </div>
-                                <p className="text-gray-600 leading-relaxed flex-grow">
-                                    {blog.content
-                                        ? blog.content.length > 200
-                                            ? `${blog.content.slice(0, 200)}...`
-                                            : blog.content
-                                        : "No content available"}
-                                </p>
-                                <div className="mt-4 flex justify-end">
-                                    <button
-                                        onClick={() => setSelectedBlog(blog)}
-                                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-                                    >
-                                        Read More
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
             </div>
-
-            {selectedBlog && (
-                <BlogModal
-                    blog={selectedBlog}
-                    onClose={() => setSelectedBlog(null)}
-                />
-            )}
         </>
     );
 };
