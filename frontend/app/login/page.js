@@ -17,7 +17,7 @@ const LoginPage = () => {
             if (token) {
                 try {
                     const response = await axios.get(
-                        "https://fullstackblog-r4gh.onrender.com/api/users/verify-token",
+                        "https://fullstackblog-bcie.onrender.com/api/users/verify-token",
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     if (response.data.valid) {
@@ -39,7 +39,7 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post(
-                "https://fullstackblog-r4gh.onrender.com/api/users/login",
+                "https://fullstackblog-bcie.onrender.com/api/users/login",
                 { email, password }
             );
 

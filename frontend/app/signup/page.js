@@ -17,7 +17,7 @@ const page = () => {
 
         try {
             const response = await axios.post(
-                "https://fullstackblog-r4gh.onrender.com/api/users/signup",
+                "https://fullstackblog-bcie.onrender.com/api/users/signup",
                 {
                     name,
                     email,

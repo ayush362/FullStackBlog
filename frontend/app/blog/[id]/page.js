@@ -15,7 +15,7 @@ const page = () => {
         const fetchBlog = async () => {
             try {
                 const response = await fetch(
-                    `https://fullstackblog-r4gh.onrender.com/api/posts/${id}`
+                    `https://fullstackblog-bcie.onrender.com/api/posts/${id}`
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch blog");

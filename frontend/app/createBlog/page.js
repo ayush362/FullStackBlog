@@ -37,7 +37,7 @@ const CreateBlog = () => {
         setMessage("");
         try {
             const response = await axios.post(
-                "https://fullstackblog-r4gh.onrender.com/api/posts",
+                "https://fullstackblog-bcie.onrender.com/api/posts",
                 {
                     title,
                     author,
@@ -61,7 +61,7 @@ const CreateBlog = () => {
         setIsLoading(true);
         try {
             const response = await axios.post(
-                "https://fullstackblog-r4gh.onrender.com/api/posts/create-with-llm",
+                "https://fullstackblog-bcie.onrender.com/api/posts/create-with-llm",
                 {
                     title,
                     author,
