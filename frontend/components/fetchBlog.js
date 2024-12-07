@@ -22,7 +22,7 @@ const FetchBlog = () => {
         const fetchBlogs = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8000/api/posts"
+                    "https://fullstackblog-r4gh.onrender.com/api/posts"
                 );
                 const sortedBlogs = response.data.sort(
                     (a, b) => new Date(b.date) - new Date(a.date)

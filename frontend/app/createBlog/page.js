@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import withAuth from "@/components/withAuth";
-const token = localStorage.getItem("token");
-
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const CreateBlog = () => {
     const [activeTab, setActiveTab] = useState("manual");
@@ -15,18 +14,30 @@ const CreateBlog = () => {
     const [contentPrompt, setContentPrompt] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [token, setToken] = useState(null); // Initialize token as null
     const router = useRouter();
 
+    useEffect(() => {
+        // Access localStorage only on the client
+        if (typeof window !== "undefined") {
+            const storedToken = localStorage.getItem("token");
+            setToken(storedToken);
+        }
+    }, []);
+
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("token");
+        }
         router.push("/login");
     };
+
     const handleCreateBlog = async (e) => {
         e.preventDefault();
         setMessage("");
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/posts",
+                "https://fullstackblog-r4gh.onrender.com/api/posts",
                 {
                     title,
                     author,
@@ -50,7 +61,7 @@ const CreateBlog = () => {
         setIsLoading(true);
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/posts/create-with-llm",
+                "https://fullstackblog-r4gh.onrender.com/api/posts/create-with-llm",
                 {
                     title,
                     author,
@@ -70,7 +81,6 @@ const CreateBlog = () => {
             setIsLoading(false);
         }
     };
-
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center">
             <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-lg">
@@ -83,6 +93,12 @@ const CreateBlog = () => {
                 >
                     Logout
                 </button>
+                <Link
+                    href="/"
+                    className="px-4 py-2 bg-purple-600 ml-5 text-white rounded-lg hover:bg-red-800 transition-all duration-300"
+                >
+                    See Blogs
+                </Link>
                 {/* Tab Navigation */}
                 <div className="flex justify-center mb-6 border-b-2 border-gray-300">
                     <button

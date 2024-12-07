@@ -17,7 +17,7 @@ const withAuth = (WrappedComponent) => {
                 }
 
                 try {
-                    await axios.get("http://localhost:8000/api/users/verify-token", {
+                    await axios.get("https://fullstackblog-r4gh.onrender.com/api/users/verify-token", {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                 } catch {

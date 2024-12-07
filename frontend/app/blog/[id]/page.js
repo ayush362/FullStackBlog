@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 const page = () => {
     const [blog, setBlog] = useState(null);
@@ -13,7 +14,9 @@ const page = () => {
 
         const fetchBlog = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/posts/${id}`);
+                const response = await fetch(
+                    `https://fullstackblog-r4gh.onrender.com/api/posts/${id}`
+                );
                 if (!response.ok) {
                     throw new Error("Failed to fetch blog");
                 }
@@ -42,12 +45,31 @@ const page = () => {
     }
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold mb-6">{blog.title}</h1>
-            <div className="text-gray-600 mb-6">
-                <span>By {blog.author || "Unknown Author"}</span>
+        <div className="max-w-4xl mx-auto px-6 py-10 bg-white shadow-md rounded-lg">
+            <h1 className="text-5xl font-extrabold mb-8 text-gray-800 leading-tight">
+                {blog.title}
+            </h1>
+            <div className="flex flex-wrap items-center text-sm text-gray-600 mb-8">
+                <span className="mr-4">
+                    <span className="font-semibold">By:</span>{" "}
+                    {blog.author || "Unknown Author"}
+                </span>
                 {blog.date && (
-                    <span className="ml-4">
+                    <span className="mr-4 flex items-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className="w-5 h-5 mr-1 text-purple-600"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M8.25 4.5v1.125M15.75 4.5v1.125M3 9.75h18M4.5 9.75v9.375a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V9.75M3 9.75a2.25 2.25 0 012.25-2.25h13.5a2.25 2.25 0 012.25 2.25M3 9.75h18"
+                            />
+                        </svg>
                         {new Date(blog.date).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
@@ -55,6 +77,12 @@ const page = () => {
                         })}
                     </span>
                 )}
+                <Link
+                    href="/"
+                    className="ml-auto px-5 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-800 transition-all duration-300"
+                >
+                    All Blogs
+                </Link>
             </div>
             <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
                 {blog.content.split("\n").map((paragraph, index) => (

@@ -17,7 +17,7 @@ const LoginPage = () => {
             if (token) {
                 try {
                     const response = await axios.get(
-                        "http://localhost:8000/api/users/verify-token",
+                        "https://fullstackblog-r4gh.onrender.com/api/users/verify-token",
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     if (response.data.valid) {
@@ -39,7 +39,7 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/users/login",
+                "https://fullstackblog-r4gh.onrender.com/api/users/login",
                 { email, password }
             );
 
@@ -109,7 +109,7 @@ const LoginPage = () => {
                         Login
                     </button>
                 </form>
-                <div className="text-center mt-6">
+                {/* <div className="text-center mt-6">
                     <p className="text-lg text-gray-600">
                         Don't have an account?{" "}
                         <a
@@ -119,7 +119,7 @@ const LoginPage = () => {
                             Sign up
                         </a>
                     </p>
-                </div>
+                </div> */}
             </div>
         </div>
     );

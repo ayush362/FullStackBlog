@@ -22,11 +22,11 @@ const AdminPage = () => {
                             Login
                         </p>
                     </Link>
-                    <Link href="/signup">
+                    {/* <Link href="/signup">
                         <p className="bg-blue-700 px-6 py-3 rounded-full shadow-lg font-bold hover:bg-blue-800 transition-all">
                             Signup
                         </p>
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
         </div>
