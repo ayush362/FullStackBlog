@@ -1,3 +1,4 @@
+deployed:https://full-stack-blog-ten.vercel.app/
 Setup instructions
 
 Follow these steps to set up and run the project locally:
